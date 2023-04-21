@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".authentication.signup.SignupFragment">
+
+    <TextView
+        android:id="@+id/signup_fragment_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/signup_fragment_label"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/signup_fragment_mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/fragment_signup_hint_email"
+        app:layout_constraintBottom_toTopOf="@id/signup_fragment_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_fragment_label" />
+
+    <EditText
+        android:id="@+id/signup_fragment_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/fragment_signup_hint_password"
+        app:layout_constraintBottom_toTopOf="@id/signup_fragment_button"
+        app:layout_constraintTop_toBottomOf="@id/signup_fragment_mail" />
+
+    <Button
+        android:id="@+id/signup_fragment_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_fragment_button"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

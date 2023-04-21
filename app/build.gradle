@@ -36,6 +36,7 @@ android {
     //    enabledForTests = true
     //}
     buildFeatures {
+        viewBinding true
         dataBinding true
     }
 }
