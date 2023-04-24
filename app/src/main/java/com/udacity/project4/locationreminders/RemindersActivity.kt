@@ -4,10 +4,14 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
 
 /**
@@ -24,7 +28,7 @@ class RemindersActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-//                (nav_host_fragment as NavHostFragment).navController.popBackStack()
+                findNavController(R.id.nav_host_fragment_reminders).popBackStack()
                 return true
             }
         }
