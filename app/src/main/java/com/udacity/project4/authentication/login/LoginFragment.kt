@@ -15,7 +15,6 @@ import com.udacity.project4.locationreminders.RemindersActivity
 class LoginFragment : Fragment() {
 
     companion object {
-        const val TAG = "MainFragment"
         const val SIGN_IN_RESULT_CODE = 1001
     }
 

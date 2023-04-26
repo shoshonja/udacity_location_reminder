@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
+const val LOG_TAG = "Ivan_log"
 class MyApp : Application() {
 
     override fun onCreate() {
