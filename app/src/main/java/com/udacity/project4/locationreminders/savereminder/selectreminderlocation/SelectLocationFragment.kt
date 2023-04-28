@@ -3,7 +3,6 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -18,7 +17,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
@@ -39,13 +39,24 @@ import java.util.*
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
-    private val LOCATION_PERMISSION_INDEX = 0
-    private val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
-    private val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
-    private val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE = 33
     private val runningQOrLater = android.os.Build.VERSION.SDK_INT >=
             android.os.Build.VERSION_CODES.Q
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            var areAllPermissionsGranted = true
+            permissions.entries.forEach { entry ->
+                val isGranted = entry.value
+                if (!isGranted) {
+                    areAllPermissionsGranted = false
+                }
+            }
+            if (areAllPermissionsGranted) {
+                enableMyLocation()
+            } else {
+                createSnackbar()
+            }
+        }
 
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
@@ -54,15 +65,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
 
-    override fun onStart() {
-        super.onStart()
-        if (foregroundAndBackgroundLocationPermissionApproved()) {
-            //TODO
-        } else {
-            requestForegroundAndBackgroundLocationPermissions()
-        }
-    }
-
+    @SuppressLint("InlinedApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -79,14 +82,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
-
 //        TODO: add the map setup implementation
 //        TODO: zoom to the user location after taking his permission
 //        TODO: add style to the map
 //        TODO: put a marker to location that the user selected
 //        TODO: call this function after the user confirms on the selected location
-        onLocationSelected()
-
+//        onLocationSelected()
         return binding.root
     }
 
@@ -97,24 +98,53 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             resources.getString(R.string.select_location_fragment_user_info),
             Toast.LENGTH_SHORT
         ).show()
+        checkAndRequestPermissions()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
+        if (allPermissionsGranted()) {
+            enableMyLocation()
+        }
 
-        enableMyLocation()
         setMapStyle(googleMap)
         setMapLongClick(googleMap)
         setPoiClick(googleMap)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun enableMyLocation() {
-        if (foregroundAndBackgroundLocationPermissionApproved()) {
-            googleMap.isMyLocationEnabled = true
-        } else {
-            requestForegroundAndBackgroundLocationPermissions()
+    @SuppressLint("InlinedApi")
+    private fun checkAndRequestPermissions() {
+        if (!allPermissionsGranted()) {
+            requestPermissionLauncher.launch(neededPermissions())
         }
+    }
+
+    private fun allPermissionsGranted(): Boolean {
+        return neededPermissions().all {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun neededPermissions(): Array<String> {
+        var permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+
+        if (runningQOrLater) {
+            permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+        }
+        return permissions
+    }
+
+    @SuppressLint("MissingPermission")
+    fun enableMyLocation() {
+        googleMap.isMyLocationEnabled = true
     }
 
     private fun setMapLongClick(map: GoogleMap) {
@@ -167,6 +197,21 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         //         and navigate back to the previous fragment to save the reminder and add the geofence
     }
 
+    private fun createSnackbar() {
+        Snackbar.make(
+            binding.root,
+            R.string.permission_denied_explanation,
+            Snackbar.LENGTH_INDEFINITE
+        ).setAction(R.string.settings) {
+            startActivity(Intent().apply {
+                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            })
+        }.show()
+    }
+
+
     override fun onResume() {
         super.onResume()
         mapView.onResume()
@@ -209,77 +254,5 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             true
         }
         else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (
-            grantResults.isEmpty() ||
-            grantResults[LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
-            (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
-                    grantResults[BACKGROUND_LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED)
-        ) {
-            createSnackbar()
-        } else{
-            enableMyLocation()
-        }
-    }
-
-    @TargetApi(29)
-    private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
-        val foregroundLocationApproved =
-            (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ))
-        val backgroundPermissionApproved = if (runningQOrLater) {
-            PackageManager.PERMISSION_GRANTED ==
-                    ActivityCompat.checkSelfPermission(
-                        requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                    )
-        } else {
-            true
-        }
-        return foregroundLocationApproved && backgroundPermissionApproved
-    }
-
-    /*
-     *  Requests ACCESS_FINE_LOCATION and (on Android 10+ (Q) ACCESS_BACKGROUND_LOCATION.
-     */
-    @TargetApi(29)
-    private fun requestForegroundAndBackgroundLocationPermissions() {
-        if (foregroundAndBackgroundLocationPermissionApproved())
-            return
-        var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        val resultCode = when {
-            runningQOrLater -> {
-                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
-            }
-            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
-        }
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            permissionsArray,
-            resultCode
-        )
-        createSnackbar()
-    }
-
-    private fun createSnackbar(){
-        Snackbar.make(
-            binding.root,
-            R.string.permission_denied_explanation,
-            Snackbar.LENGTH_INDEFINITE
-        ).setAction(R.string.settings) {
-            startActivity(Intent().apply {
-                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            })
-        }.show()
     }
 }
