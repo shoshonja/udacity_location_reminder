@@ -3,6 +3,8 @@ package com.udacity.project4.locationreminders.savereminder
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseViewModel
@@ -11,6 +13,7 @@ import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
@@ -33,12 +36,29 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         longitude.value = null
     }
 
-    fun propagatePoiData(){
-        if(selectedPOI.value != null){
+    fun propagatePoiData() {
+        if (selectedPOI.value != null) {
             reminderSelectedLocationStr.value = selectedPOI.value!!.name
             latitude.value = selectedPOI.value!!.latLng.latitude
             longitude.value = selectedPOI.value!!.latLng.longitude
         }
+    }
+
+     fun createGeofencingRequest(): GeofencingRequest {
+        val geofence = Geofence.Builder().setRequestId(selectedPOI.value!!.placeId)
+            .setCircularRegion(
+                selectedPOI.value!!.latLng.latitude,
+                selectedPOI.value!!.latLng.longitude,
+                100f
+            ).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+            .setExpirationDuration(TimeUnit.HOURS.toMillis(1))
+            .build()
+
+        return GeofencingRequest.Builder()
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .addGeofence(geofence)
+            .build()
+
     }
 
     /**
