@@ -32,7 +32,7 @@ class ReminderListFragment : BaseFragment() {
         setDisplayHomeAsUpEnabled(false)
         setTitle(getString(R.string.app_name))
 
-        binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders() }
+        binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders(requireActivity()) }
 
         return binding.root
     }
@@ -49,7 +49,7 @@ class ReminderListFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         //load the reminders list on the ui
-        _viewModel.loadReminders()
+        _viewModel.loadReminders(requireActivity())
     }
 
     private fun navigateToAddReminder() {

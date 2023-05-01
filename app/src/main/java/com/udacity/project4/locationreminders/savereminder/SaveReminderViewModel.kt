@@ -45,22 +45,6 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         }
     }
 
-     fun createGeofencingRequest(reminderDataItem: ReminderDataItem): GeofencingRequest {
-        val geofence = Geofence.Builder().setRequestId(reminderDataItem.id)
-            .setCircularRegion(
-                reminderDataItem.latitude!!,
-                reminderDataItem.longitude!!,
-                GEOFENCE_RADIUS_METERS
-            ).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-            .setExpirationDuration(GEOFENCE_DURATION_MILLIS)
-            .build()
-
-        return GeofencingRequest.Builder()
-            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            .addGeofence(geofence)
-            .build()
-    }
-
     /**
      * Validate the entered data then saves the reminder data to the DataSource
      */

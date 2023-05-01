@@ -1,22 +1,16 @@
 package com.udacity.project4.locationreminders.savereminder
 
-import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.location.LocationServices
-import com.udacity.project4.ACTION_GEOFENCE_EVENT
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
-import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.utils.createGeofence
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
@@ -60,35 +54,7 @@ class SaveReminderFragment : BaseFragment() {
         )
 
         _viewModel.validateAndSaveReminder(reminderDataItem)
-        createGeofence(reminderDataItem)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun createGeofence(reminderDataItem: ReminderDataItem) {
-        val geofencePendingIntent: PendingIntent by lazy {
-            val intent = Intent(requireActivity(), GeofenceBroadcastReceiver::class.java)
-            intent.action = ACTION_GEOFENCE_EVENT
-            PendingIntent.getBroadcast(
-                requireContext(),
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
-        val geofencingClient = LocationServices.getGeofencingClient(requireActivity())
-
-        geofencingClient.addGeofences(
-            _viewModel.createGeofencingRequest(reminderDataItem),
-            geofencePendingIntent
-        )?.run {
-            addOnSuccessListener {
-                Toast.makeText(requireContext(), "Geofence added!", Toast.LENGTH_SHORT).show()
-            }
-            addOnFailureListener {
-                Toast.makeText(requireContext(), "Error adding geofence", Toast.LENGTH_SHORT).show()
-            }
-        }
+        createGeofence(requireActivity(), reminderDataItem)
     }
 
     override fun onDestroy() {

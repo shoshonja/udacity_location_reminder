@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.reminderslist
 
+import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -7,10 +8,11 @@ import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
+import com.udacity.project4.utils.createGeofence
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(
-    app: Application,
+    val app: Application,
     private val dataSource: ReminderDataSource
 ) : BaseViewModel(app) {
     // list that holds the reminder data to be displayed on the UI
@@ -20,7 +22,7 @@ class RemindersListViewModel(
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
      * or show error if any
      */
-    fun loadReminders() {
+    fun loadReminders(activity: Activity) {
         showLoading.value = true
         viewModelScope.launch {
             //interacting with the dataSource has to be through a coroutine
@@ -40,6 +42,9 @@ class RemindersListViewModel(
                             reminder.id
                         )
                     })
+                    for(reminderDataItem in dataList){
+                        createGeofence(activity, reminderDataItem)
+                    }
                     remindersList.value = dataList
                 }
                 is Result.Error ->
