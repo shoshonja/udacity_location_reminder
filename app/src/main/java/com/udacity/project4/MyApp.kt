@@ -12,6 +12,10 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 const val LOG_TAG = "Ivan_log"
+const val GEOFENCE_RADIUS_METERS = 100f
+const val GEOFENCE_DURATION_MILLIS = 3_600_000L
+const val ACTION_GEOFENCE_EVENT =
+    "com.udacity.project4.locationreminders.savereminder.action.ACTION_GEOFENCE_EVENT"
 class MyApp : Application() {
 
     override fun onCreate() {

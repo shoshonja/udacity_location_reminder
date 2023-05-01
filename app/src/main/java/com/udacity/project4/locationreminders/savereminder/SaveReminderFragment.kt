@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.LocationServices
+import com.udacity.project4.ACTION_GEOFENCE_EVENT
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -46,42 +47,41 @@ class SaveReminderFragment : BaseFragment() {
             _viewModel.navigationCommand.value =
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
+        binding.saveReminder.setOnClickListener { handleSaveReminderClicked() }
+    }
 
-        binding.saveReminder.setOnClickListener {
-            val title = _viewModel.reminderTitle.value
-            val description = _viewModel.reminderDescription.value
-            val location = _viewModel.reminderSelectedLocationStr.value
-            val latitude = _viewModel.latitude.value
-            val longitude = _viewModel.longitude.value
+    private fun handleSaveReminderClicked() {
+        val reminderDataItem = ReminderDataItem(
+            title = _viewModel.reminderTitle.value,
+            description = _viewModel.reminderDescription.value,
+            location = _viewModel.reminderSelectedLocationStr.value,
+            latitude = _viewModel.latitude.value,
+            longitude = _viewModel.longitude.value
+        )
 
-            _viewModel.validateAndSaveReminder(
-                ReminderDataItem(
-                    title,
-                    description,
-                    location,
-                    latitude,
-                    longitude
-                )
-            )
-            createGeofence()
-
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
-        }
+        _viewModel.validateAndSaveReminder(reminderDataItem)
+        createGeofence(reminderDataItem)
     }
 
     @SuppressLint("MissingPermission")
-    private fun createGeofence() {
+    private fun createGeofence(reminderDataItem: ReminderDataItem) {
         val geofencePendingIntent: PendingIntent by lazy {
             val intent = Intent(requireActivity(), GeofenceBroadcastReceiver::class.java)
             intent.action = ACTION_GEOFENCE_EVENT
-            PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(
+                requireContext(),
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         val geofencingClient = LocationServices.getGeofencingClient(requireActivity())
 
-        geofencingClient.addGeofences(_viewModel.createGeofencingRequest(), geofencePendingIntent)?.run {
+        geofencingClient.addGeofences(
+            _viewModel.createGeofencingRequest(reminderDataItem),
+            geofencePendingIntent
+        )?.run {
             addOnSuccessListener {
                 Toast.makeText(requireContext(), "Geofence added!", Toast.LENGTH_SHORT).show()
             }
@@ -95,10 +95,5 @@ class SaveReminderFragment : BaseFragment() {
         super.onDestroy()
         //make sure to clear the view model after destroy, as it's a single view model.
         _viewModel.onClear()
-    }
-
-    companion object {
-        internal const val ACTION_GEOFENCE_EVENT =
-            "com.udacity.project4.locationreminders.savereminder.action.ACTION_GEOFENCE_EVENT"
     }
 }

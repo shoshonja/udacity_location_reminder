@@ -3,6 +3,12 @@ package com.udacity.project4.locationreminders.geofence
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofencingEvent
+import com.udacity.project4.ACTION_GEOFENCE_EVENT
+import com.udacity.project4.LOG_TAG
+import com.udacity.project4.utils.sendNotification
 
 /**
  * Triggered by the Geofence.  Since we can have many Geofences at once, we pull the request
@@ -16,8 +22,16 @@ import android.content.Intent
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == ACTION_GEOFENCE_EVENT) {
+            val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
-//TODO: implement the onReceive method to receive the geofencing events at the background
+            if (geofencingEvent.hasError()) {
+                Log.e(LOG_TAG, "Error happened: $geofencingEvent.errorCode")
+                return
+            }
 
+            GeofenceTransitionsJobIntentService.enqueueWork(context, intent)
+            //TODO kada se app diže, od svih notifikacija u listi kreirati geofence. Remove geofence first i onda create
+        }
     }
 }
