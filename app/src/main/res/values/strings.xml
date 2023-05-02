@@ -9,7 +9,6 @@
     <string name="save">Save</string>
     <string name="reminder_saved">Reminder Saved !</string>
     <string name="logout">Logout</string>
-<!--    <string name="welcome_to_the_location_reminder_app">Welcome to the location reminder app</string>-->
     <string name="login">Login</string>
     <string name="title_activity_maps">Map</string>
     <string name="normal_map">Normal Map</string>
@@ -44,12 +43,16 @@
     <!-- Sign up-->
     <string name="signup_fragment_label">Welcome to the location reminder app!\nDon\'t have an account?\nSignup!</string>
     <string name="signup_fragment_button">Sign up</string>
+    <string name="fragment_signup_hint_password">Enter your password</string>
+    <string name="fragment_signup_hint_email">Enter your email</string>
+    <string name="fragment_signup_error_authentication">Authentication failed.</string>
+    <string name="fragment_signup_warning_mail">Mail must not be empty</string>
+    <string name="fragment_signup_warning_password">Password must not be empty</string>
 
     <!-- Login-->
     <string name="login_fragment_label">Welcome back to the location reminder app!</string>
     <string name="login_fragment_button">Login</string>
-    <string name="fragment_signup_hint_password">Enter your password</string>
-    <string name="fragment_signup_hint_email">Enter your email</string>
+
 
     <string name="select_location_fragment_user_info">Please select a location or a POI on the map to create a reminder</string>
     <string name="select_location_fragment_empty_marker">Please select a location to be saved!</string>
@@ -58,5 +61,6 @@
     <string name="activity_reminder_description_title">Title:</string>
     <string name="activity_reminder_description_description">Description:</string>
     <string name="activity_reminder_description_location">Location:</string>
+
 
 </resources>

@@ -2,14 +2,14 @@ package com.udacity.project4.authentication.signup
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.udacity.project4.R
 import com.udacity.project4.databinding.FragmentSignupBinding
 import com.udacity.project4.locationreminders.RemindersActivity
 
@@ -46,11 +46,18 @@ class SignupFragment : Fragment() {
                 signupFragmentPassword.text.toString(),
             ).addOnCompleteListener(this@SignupFragment.requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    startActivity(Intent(this@SignupFragment.requireActivity(), RemindersActivity::class.java))
-
-//                    findNavController().navigate(SignupFragmentDirections.actionSignupFragmentToSaveReminderFragment())
+                    startActivity(
+                        Intent(
+                            this@SignupFragment.requireActivity(),
+                            RemindersActivity::class.java
+                        )
+                    )
                 } else {
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.fragment_signup_error_authentication),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -64,9 +71,17 @@ class SignupFragment : Fragment() {
         val passwordEmpty = signupFragmentPassword.text.isEmpty()
 
         if (mailEmpty)
-            Toast.makeText(requireContext(), "Mail must not be empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.fragment_signup_warning_mail),
+                Toast.LENGTH_SHORT
+            ).show()
         if (passwordEmpty)
-            Toast.makeText(requireContext(), "Password must not be empty", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.fragment_signup_warning_password),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         return mailEmpty && passwordEmpty
     }

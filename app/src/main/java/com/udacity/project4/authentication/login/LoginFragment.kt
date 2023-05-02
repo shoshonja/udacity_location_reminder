@@ -54,7 +54,6 @@ class LoginFragment : Fragment() {
         if (requestCode == SIGN_IN_RESULT_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 startActivity(Intent(this.requireActivity(), RemindersActivity::class.java))
-//                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSaveReminderFragment())
             } else {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSignupFragment())
             }

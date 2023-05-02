@@ -31,7 +31,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             }
 
             GeofenceTransitionsJobIntentService.enqueueWork(context, intent)
-            //TODO kada se app diže, od svih notifikacija u listi kreirati geofence. Remove geofence first i onda create
         }
     }
 }
