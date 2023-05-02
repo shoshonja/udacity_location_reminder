@@ -16,18 +16,64 @@
         android:gravity="center"
         android:orientation="vertical"
         tools:context=".locationreminders.ReminderDescriptionActivity">
-        <!--TODO: add the design of the reminder details-->
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Reminder Details"
+            android:paddingBottom="@dimen/padding_large"
+            android:text="@string/activity_reminder_description_details"
             android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/activity_reminder_description_title_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="@dimen/padding_medium"
+            android:text="@string/activity_reminder_description_title" />
+
+        <TextView
+            android:id="@+id/activity_reminder_description_title_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="@dimen/padding_medium" />
+
+        <TextView
+            android:id="@+id/activity_reminder_description_description_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="@dimen/padding_medium"
+            android:text="@string/activity_reminder_description_description" />
+
+        <TextView
+            android:id="@+id/activity_reminder_description_description_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="@dimen/padding_medium" />
+
+        <TextView
+            android:id="@+id/activity_reminder_description_location_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="@dimen/padding_medium"
+            android:text="@string/activity_reminder_description_location" />
+
+        <TextView
+            android:id="@+id/activity_reminder_description_location_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingStart="@dimen/padding_medium" />
 
     </LinearLayout>
 </layout>

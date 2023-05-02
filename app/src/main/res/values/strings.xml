@@ -54,4 +54,9 @@
     <string name="select_location_fragment_user_info">Please select a location or a POI on the map to create a reminder</string>
     <string name="select_location_fragment_empty_marker">Please select a location to be saved!</string>
 
+    <string name="activity_reminder_description_details">Reminder details</string>
+    <string name="activity_reminder_description_title">Title:</string>
+    <string name="activity_reminder_description_description">Description:</string>
+    <string name="activity_reminder_description_location">Location:</string>
+
 </resources>
