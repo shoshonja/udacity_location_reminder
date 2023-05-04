@@ -3,11 +3,13 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentRemindersBinding
+import com.udacity.project4.utils.createGeofence
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import com.udacity.project4.utils.setTitle
 import com.udacity.project4.utils.setup
@@ -32,8 +34,7 @@ class ReminderListFragment : BaseFragment() {
         setDisplayHomeAsUpEnabled(false)
         setTitle(getString(R.string.app_name))
 
-        binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders(requireActivity()) }
-
+        binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders() }
         return binding.root
     }
 
@@ -44,12 +45,18 @@ class ReminderListFragment : BaseFragment() {
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
         }
+
+        _viewModel.remindersList.observe(viewLifecycleOwner, Observer { reminderList ->
+            for (reminder in reminderList) {
+                createGeofence(requireActivity(), reminder)
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
         //load the reminders list on the ui
-        _viewModel.loadReminders(requireActivity())
+        _viewModel.loadReminders()
     }
 
     private fun navigateToAddReminder() {

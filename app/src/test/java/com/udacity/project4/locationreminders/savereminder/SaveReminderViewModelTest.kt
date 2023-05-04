@@ -1,6 +1,5 @@
 package com.udacity.project4.locationreminders.savereminder
 
-import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.maps.model.LatLng
@@ -9,7 +8,6 @@ import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -67,17 +65,13 @@ class SaveReminderViewModelTest {
 
     lateinit var fakeLocalRepository: ReminderDataSource
     lateinit var subjectUnderTest: SaveReminderViewModel
-    var application: Application? = null
 
     @Before
     fun createRepository() {
-        if (application == null) {
-            application = ApplicationProvider.getApplicationContext()
-        }
         fakeLocalRepository =
             FakeDataSource(reminders = mutableListOf(reminder1, reminder2, reminder3))
         subjectUnderTest =
-            SaveReminderViewModel(application!!, fakeLocalRepository)
+            SaveReminderViewModel(ApplicationProvider.getApplicationContext(), fakeLocalRepository)
     }
 
     @Test
@@ -222,8 +216,4 @@ class SaveReminderViewModelTest {
     fun tearDown() {
         stopKoin()
     }
-
-    //TODO: provide testing to the SaveReminderView and its live data objects
-
-
-}
+    }
