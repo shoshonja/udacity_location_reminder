@@ -26,9 +26,6 @@ import org.junit.runner.RunWith
 @SmallTest
 class RemindersDaoTest {
 
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
-
     private val reminder1 = ReminderDTO(
         title = "title1",
         description = "description1",
@@ -55,6 +52,9 @@ class RemindersDaoTest {
     )
 
     private lateinit var database: RemindersDatabase
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun initDb() {

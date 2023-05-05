@@ -5,11 +5,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.getOrAwaitValue
-import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
@@ -69,7 +67,7 @@ class RemindersListViewModelTest {
         //When
         subjectUnderTest.loadReminders()
         //Then
-        val reminders  = subjectUnderTest.remindersList.getOrAwaitValue()
+        val reminders = subjectUnderTest.remindersList.getOrAwaitValue()
         assertTrue(reminders.isEmpty())
     }
 
