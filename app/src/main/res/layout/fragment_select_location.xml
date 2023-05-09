@@ -18,10 +18,10 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/selectLocationFragmnetButttonSave"/>
+            app:layout_constraintBottom_toTopOf="@+id/selectLocationFragmentButtonSave"/>
         <Button
             android:text="@string/save"
-            android:id="@+id/selectLocationFragmnetButttonSave"
+            android:id="@+id/selectLocationFragmentButtonSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

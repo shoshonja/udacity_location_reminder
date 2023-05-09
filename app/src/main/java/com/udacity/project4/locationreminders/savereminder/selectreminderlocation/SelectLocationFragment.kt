@@ -22,7 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -82,7 +82,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         binding.viewModel = _viewModel
         binding.lifecycleOwner = this
-        binding.selectLocationFragmnetButttonSave.setOnClickListener { onLocationSelected() }
+        binding.selectLocationFragmentButtonSave.setOnClickListener { onLocationSelected() }
 
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
